@@ -1,11 +1,11 @@
 {
-  "name": "keystone",
-  "version": "4.0.0-beta.7",
+  "name": "@naustudio/keystone",
+  "version": "4.0.0-beta.6",
   "description": "Web Application Framework and Admin GUI / Content Management System built on Express.js and Mongoose",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/keystonejs/keystone.git"
+    "url": "https://github.com/naustudio/keystone.git"
   },
   "dependencies": {
     "async": "2.5.0",
@@ -138,6 +138,9 @@
     "underscore": "global:_"
   },
   "author": "Jed Watson",
+  "contributors": [
+    "Nau Studio <dev@naustud.io> (https://github.com/naustudio)"
+  ],
   "homepage": "http://keystonejs.com/",
   "license": "MIT",
   "keywords": [
