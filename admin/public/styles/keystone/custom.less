@@ -1,12 +1,38 @@
+.field.en,
+.field.zh {
+	& .field-label {
+		color: transparent;
+		position: relative;
+	}
+}
 
-.lang-en .field.vi {
+.field.zh,
+.field.en,
+.field.vi {
+	& .field-label:after {
+		position: absolute;
+		right: 0;
+		color: #999;
+	}
+}
+
+.field.en .field-label:after {
+	content: '(EN)';
+}
+
+.field.zh .field-label:after {
+	content: '(ZH)';
+}
+
+.field.vi .field-label:after {
+	content: '(VI)';
+}
+
+.language-selection {
 	display: none;
 }
 
-.lang-vi .field.en {
-	display: none;
-}
-
+.lang-zh .create-form .field,
 .lang-en .create-form .field,
 .lang-vi .create-form .field {
 	display: block;
