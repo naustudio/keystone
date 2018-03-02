@@ -1,16 +1,14 @@
-var keystone = require('../..'),
-	sinon = require('sinon');
+var keystone = require('../..');
+var sinon = require('sinon');
 
 describe('Keystone.session', function() {
 
 	describe('keystone.session.signinWithUser()', function() {
 		// mock args for signinWithUser(user, req, res, onSuccess)
-		var res = {
-				cookie: sinon.stub()
-			},
-			onSuccess = sinon.stub(),
-			user,
-			req;
+		var res = { cookie: sinon.stub() };
+		var onSuccess = sinon.stub();
+		var user;
+		var req;
 
 		function resetMocks() {
 			user = {
@@ -248,20 +246,34 @@ describe('Keystone.session', function() {
 
 			});
 
-			it('shoud not match email when invalid', function (done) {
+			it('should not match email when invalid', function (done) {
 				var lookup = { email: 'xxx', password: 'password'};
-				keystone.session.signin(lookup, null, null, this.onSuccess, function(){
-					// make sure .findOne() is called with a regular expression
-					sinon.assert.calledOnce(this.User.model.findOne);
-					this.User.model.findOne.getCall(0).args[0].email.must.be.instanceof(RegExp);
-					// make sure .exec() is called after
-					sinon.assert.calledOnce(this.User.model.exec);
+				keystone.session.signin(lookup, null, null, this.onSuccess, function(err){
+					// make sure .findOne() was not called
+					sinon.assert.notCalled(this.User.model.findOne);
+					// make sure .exec() was not called
+					sinon.assert.notCalled(this.User.model.exec);
 					this.User.model.exec.calledAfter(this.User.model.findOne).must.be.true;
+					err.must.be.an.instanceof(Error)
 					// make sure .signinWithUser() is NOT called on failed match
 					sinon.assert.notCalled(keystone.session.signinWithUser);
-					done();
+					done()
 				}.bind(this));
+			});
 
+			it('should not match email when just a regex', function (done) {
+				var lookup = { email: '\.', password: 'password'};
+				keystone.session.signin(lookup, null, null, this.onSuccess, function(err){
+					// make sure .findOne() was not called
+					sinon.assert.notCalled(this.User.model.findOne);
+					// make sure .exec() was not called
+					sinon.assert.notCalled(this.User.model.exec);
+					this.User.model.exec.calledAfter(this.User.model.findOne).must.be.true;
+					err.must.be.an.instanceof(Error)
+					// make sure .signinWithUser() is NOT called on failed match
+					sinon.assert.notCalled(keystone.session.signinWithUser);
+					done()
+				}.bind(this));
 			});
 
 		});

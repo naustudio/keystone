@@ -1,9 +1,10 @@
-var cloudinary = require('cloudinary'),
-	keystone = require('../../');
+var cloudinary = require('cloudinary');
 
 exports = module.exports = {
 
 	upload: function(req, res) {
+		var keystone = req.keystone;
+		
 		if(req.files && req.files.file){
 			var options = {};
 
@@ -33,9 +34,9 @@ exports = module.exports = {
 	},
 
 	autocomplete: function(req, res) {
-		var max = req.query.max || 10,
-			prefix = req.query.prefix || '',
-			next = req.query.next || null;
+		var max = req.query.max || 10;
+		var prefix = req.query.prefix || '';
+		var next = req.query.next || null;
 
 		cloudinary.api.resources(function(result) {
 			if (result.error) {

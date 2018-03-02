@@ -1,8 +1,9 @@
-var keystone = require('../../../'),
-	session = require('../../../lib/session');
+var session = require('../../../lib/session');
 
 exports = module.exports = function(req, res) {
 
+	var keystone = req.keystone;
+	
 	session.signout(req, res, function() {
 
 		if ('string' === typeof keystone.get('signout redirect')) {

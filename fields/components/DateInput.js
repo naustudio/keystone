@@ -1,25 +1,25 @@
-var React = require('react'),
-	Pikaday = require('pikaday'),
-	moment = require('moment');
+var moment = require('moment');
+var Pikaday = require('pikaday');
+var React = require('react');
 
 module.exports = React.createClass({
-	
+
 	displayName: 'DateInput',
-	
+
 	// set default properties
 	getDefaultProps: function() {
 		return {
 			format: 'YYYY-MM-DD'
 		};
 	},
-	
+
 	getInitialState: function() {
 		return {
 			value: this.props.value,
 			id: Math.round(Math.random() * 100000)
 		};
 	},
-	
+
 	componentWillReceiveProps: function(newProps) {
 		if (newProps.value === this.state.value) return;
 		this.setState({
@@ -29,36 +29,40 @@ module.exports = React.createClass({
 	},
 
 	componentDidMount: function() {
-		// add date picker
-		this.picker = new Pikaday({ 
+		this.picker = new Pikaday({
 			field: this.getDOMNode(),
 			format: this.props.format,
 			yearRange: this.props.yearRange,
-			onSelect: function(/*date*/) {//eslint-disable-line no-unused-vars
+			onSelect: (date) => { // eslint-disable-line no-unused-vars
 				if (this.props.onChange && this.picker.toString() !== this.props.value) {
 					this.props.onChange(this.picker.toString());
 				}
-			}.bind(this)
-		});			
+			}
+		});
 	},
 
 	componentWillUnmount: function() {
-		// clean up
 		this.picker.destroy();
 	},
-	
+
 	handleChange: function(e) {
 		if (e.target.value === this.state.value) return;
 		this.setState({ value: e.target.value });
 	},
-	
-	handleBlur: function(e) {//eslint-disable-line no-unused-vars
+
+	handleBlur: function(e) { // eslint-disable-line no-unused-vars
 		if (this.state.value === this.props.value) return;
-		this.picker.setMoment(moment(this.state.value, this.props.format));
+		var newValue = moment(this.state.value, this.props.format);
+		if (newValue.isValid()) {
+			this.picker.setMoment(newValue);
+		} else {
+			this.picker.setDate(null);
+			if (this.props.onChange) this.props.onChange('');
+		}
 	},
 
 	render: function() {
-		return <input type="text" name={this.props.name} value={this.state.value} placeholder={this.props.format} onChange={this.handleChange} onBlur={this.handleBlur} autoComplete="off" className="form-control" />;
+		return <input type="text" name={this.props.name} value={this.state.value} placeholder={this.props.placeholder} onChange={this.handleChange} onBlur={this.handleBlur} autoComplete="off" className="form-control" />;
 	}
-	
+
 });
