@@ -38,3 +38,4 @@ package-lock.json
 # Website dependencies
 website/.cache
 website/public
+admin/public/media

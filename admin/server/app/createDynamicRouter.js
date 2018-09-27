@@ -74,6 +74,9 @@ module.exports = function createDynamicRouter (keystone) {
 		router.post('/api/s3/upload', require('../api/s3').upload);
 	}
 
+	router.post('/api/media/upload', require('../api/media').upload);
+	router.get('/api/media/get', require('../api/media').get);
+
 	// #5: Core Lists API
 	var initList = require('../middleware/initList');
 
