@@ -31,6 +31,24 @@ var media = {
 			}
 		}
 	},
+	getAll (pathPrefix, cb) {
+		fs.readdir(path.join(__dirname, '../../public/media/images/'), function (err, files) {
+			if (err) {
+				console.log(err);
+			}
+
+			var result = files.map(function (file) {
+				return {
+					title: file.substring(0, file.lastIndexOf('.')),
+					value: '/' + pathPrefix + '/media/images/' + file,
+				};
+			});
+
+			if (cb) {
+				cb(result);
+			}
+		});
+	},
 };
 
 module.exports = {
@@ -64,37 +82,10 @@ module.exports = {
 			res.json({ error: { message: 'No image selected' } });
 		}
 	},
-	// autocomplete: function (req, res) {
-	// 	var cloudinary = require('cloudinary');
-	// 	var max = req.query.max || 10;
-	// 	var prefix = req.query.prefix || '';
-	// 	var next = req.query.next || null;
-
-	// 	cloudinary.api.resources(function (result) {
-	// 		if (result.error) {
-	// 			res.json({ error: { message: result.error.message } });
-	// 		} else {
-	// 			res.json({
-	// 				next: result.next_cursor,
-	// 				items: result.resources,
-	// 			});
-	// 		}
-	// 	}, {
-	// 		type: 'upload',
-	// 		prefix: prefix,
-	// 		max_results: max,
-	// 		next_cursor: next,
-	// 	});
-	// },
-	get: function (req, res) {
-		// var cloudinary = require('cloudinary');
-		// cloudinary.api.resource(req.query.id, function (result) {
-		// 	if (result.error) {
-		// 		res.json({ error: { message: result.error.message } });
-		// 	} else {
-		// 		res.json({ item: result });
-		// 	}
-		// });
-		res.json({ test: req.keystone.get('wysiwyg additional options') });
+	getAll: function (req, res) {
+		const pathPrefix = req.keystone.get('admin path') || 'keystone';
+		media.getAll(pathPrefix, function (result) {
+			res.json(result);
+		});
 	},
 };

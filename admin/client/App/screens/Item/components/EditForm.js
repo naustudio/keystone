@@ -16,6 +16,7 @@ import theme from '../../../../theme';
 import { Button, LoadingButton } from '../../../elemental';
 import AlertMessages from '../../../shared/AlertMessages';
 import ConfirmationDialog from '../../../shared/ConfirmationDialog';
+import UploadedImagesDialog from '../../../shared/UploadedImagesDialog';
 
 import FormHeading from './FormHeading';
 import AltText from './AltText';
@@ -100,6 +101,11 @@ var EditForm = React.createClass({
 	toggleResetDialog () {
 		this.setState({
 			resetDialogIsOpen: !this.state.resetDialogIsOpen,
+		});
+	},
+	toggleUploadedImagesDialog () {
+		this.setState({
+			uploadedImagesDialogIsOpen: !this.state.uploadedImagesDialogIsOpen,
 		});
 	},
 	handleReset () {
@@ -288,6 +294,8 @@ var EditForm = React.createClass({
 							/>
 						</Button>
 					)}
+
+					<Button onClick={this.toggleUploadedImagesDialog}>Uploaded Images</Button>
 					{!this.props.list.nodelete && (
 						<Button disabled={loading} onClick={this.toggleDeleteDialog} variant="link" color="delete" style={styles.deleteButton} data-button="delete">
 							<ResponsiveText
@@ -384,6 +392,10 @@ var EditForm = React.createClass({
 					<Grid.Col large="one-quarter"><span /></Grid.Col>
 				</Grid.Row>
 				{this.renderFooterBar()}
+				<UploadedImagesDialog
+					isOpen={this.state.uploadedImagesDialogIsOpen}
+					onCancel={this.toggleUploadedImagesDialog}
+				/>
 				<ConfirmationDialog
 					confirmationLabel="Reset"
 					isOpen={this.state.resetDialogIsOpen}

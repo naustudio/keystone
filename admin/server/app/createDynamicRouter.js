@@ -75,7 +75,7 @@ module.exports = function createDynamicRouter (keystone) {
 	}
 
 	router.post('/api/media/upload', require('../api/media').upload);
-	router.get('/api/media/get', require('../api/media').get);
+	router.get('/api/media/getAll', require('../api/media').getAll);
 
 	// #5: Core Lists API
 	var initList = require('../middleware/initList');

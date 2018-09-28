@@ -131,6 +131,13 @@ module.exports = Field.create({
 			toolbar += options.enableImages ? ' uploadimage' : ' | uploadimage';
 		}
 
+		if (options.enableLocalMediaUploads) {
+			Object.assign(options.additionalOptions, {
+				relative_urls: false,
+				remove_script_host: false,
+			});
+		}
+
 		if (options.additionalButtons) {
 			var additionalButtons = options.additionalButtons.split(',');
 			for (i = 0; i < additionalButtons.length; i++) {
