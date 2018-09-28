@@ -19,9 +19,6 @@ const UploadedImagesDialog = React.createClass({
 			isOpen: false,
 		};
 	},
-	componentDidMount () {
-		document.body.addEventListener('keyup', this.handleKeyPress, false);
-	},
 	componentWillReceiveProps (nextProps) {
 		if (nextProps.isOpen !== this.props.isOpen && nextProps.isOpen) {
 			var context = this;
@@ -36,14 +33,6 @@ const UploadedImagesDialog = React.createClass({
 					}
 				});
 			}
-		}
-	},
-	componentWillUnmount () {
-		document.body.removeEventListener('keyup', this.handleKeyPress, false);
-	},
-	handleKeyPress (evt) {
-		if (vkey[evt.keyCode] === '<escape>') {
-			this.props.onCancel();
 		}
 	},
 	handleCopyImageLinkclick (evt) {
