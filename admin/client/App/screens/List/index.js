@@ -113,6 +113,9 @@ const ListView = React.createClass({
 			}
 		});
 	},
+	uploadMultipleFiles (e) {
+		console.log('test');
+	},
 	updateSearch (e) {
 		this.props.dispatch(setActiveSearch(e.target.value));
 	},
@@ -263,6 +266,9 @@ const ListView = React.createClass({
 					createOnClick={autocreate
 						? this.createAutocreate
 						: this.openCreateModal}
+
+					// upload multiple files
+					uploadMultipleFilesClick={this.uploadMultipleFiles}
 
 					// search
 					searchHandleChange={this.updateSearch}
@@ -483,6 +489,7 @@ const ListView = React.createClass({
 								pageSize={this.props.lists.page.size}
 								drag={this.props.lists.drag}
 								dispatch={this.props.dispatch}
+								router={this.context.router}
 							/>
 							{this.renderNoSearchResults()}
 						</div>

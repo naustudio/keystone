@@ -93,9 +93,44 @@ const ItemsTable = React.createClass({
 			</thead>
 		);
 	},
+	handleMediaClick (e) {
+		var { items, manageMode, checkTableItem, router } = this.props;
+		var href = e.target.dataset.href;
+		if (manageMode && checkTableItem) {
+			var index = e.target.dataset.index;
+			checkTableItem(items.results[index], e);
+		} else if (href && router) {
+			router.push(href);
+		}
+	},
 	render () {
 		const { items } = this.props;
 		if (!items.results.length) return null;
+
+		if (this.props.list.isMediaCollection) {
+			return (
+				<div className="ItemList-wrapper">
+					{items.results.map((item, i) => {
+						if (item.fields.file && item.fields.file.url) {
+							return (
+								<div style={{ display: 'inline-block', width: '20%', padding: '0 10px', marginBottom: '20px' }} key={item.id}>
+									<img
+										style={{ width: '100%', cursor: 'pointer' }}
+										src={item.fields.file.url}
+										alt={item.fields.altText}
+										onClick={this.handleMediaClick.bind(this)}
+										data-index={i}
+										data-href={`${Keystone.adminPath}/${this.props.list.path}/${item.id}`}
+									/>
+								</div>
+							);
+						}
+
+						return null;
+					})}
+				</div>
+			);
+		}
 
 		const tableBody = (this.props.list.sortable) ? (
 			<DragDrop {...this.props} />

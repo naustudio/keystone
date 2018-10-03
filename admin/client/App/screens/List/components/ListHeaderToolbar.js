@@ -44,6 +44,27 @@ function CreateButton ({ listName, onClick, ...props }) {
 	);
 };
 
+function UploadMultipleFilesButton ({ onClick, ...props }) {
+	return (
+		<GlyphButton
+			block
+			color="success"
+			data-e2e-list-create-button="header"
+			glyph="plus"
+			onClick={onClick}
+			position="left"
+			title="Upload Files"
+			{...props}
+		>
+			<ResponsiveText
+				visibleSM="Upload"
+				visibleMD="Upload"
+				visibleLG="Upload files"
+			/>
+		</GlyphButton>
+	);
+};
+
 function ListHeaderToolbar ({
 	// common
 	dispatch,
@@ -57,6 +78,9 @@ function ListHeaderToolbar ({
 	createIsAvailable,
 	createListName,
 	createOnClick,
+
+	// upload multiple files
+	uploadMultipleFilesClick,
 
 	// search
 	searchHandleChange,
@@ -86,27 +110,29 @@ function ListHeaderToolbar ({
 			</Section>
 			<Section grow cssStyles={classes.buttons}>
 				<Group block>
-					<Section cssStyles={classes.filter}>
-						<ListFiltersAdd
-							dispatch={dispatch}
-							activeFilters={filtersActive}
-							availableFilters={filtersAvailable}
-						/>
-					</Section>
-					<Section cssStyles={classes.columns}>
-						<ListColumnsForm
-							availableColumns={columnsAvailable}
-							activeColumns={columnsActive}
-							dispatch={dispatch}
-						/>
-					</Section>
-					<Section cssStyles={classes.download}>
-						<ListDownloadForm
-							activeColumns={columnsActive}
-							dispatch={dispatch}
-							list={list}
-						/>
-					</Section>
+					{!list.isMediaCollection ? [
+						<Section cssStyles={classes.filter} key="0">
+							<ListFiltersAdd
+								dispatch={dispatch}
+								activeFilters={filtersActive}
+								availableFilters={filtersAvailable}
+							/>
+						</Section>,
+						<Section cssStyles={classes.columns} key="1">
+							<ListColumnsForm
+								availableColumns={columnsAvailable}
+								activeColumns={columnsActive}
+								dispatch={dispatch}
+							/>
+						</Section>,
+						<Section cssStyles={classes.download} key="2">
+							<ListDownloadForm
+								activeColumns={columnsActive}
+								dispatch={dispatch}
+								list={list}
+							/>
+						</Section>,
+					] : ''}
 					<Section cssStyles={classes.expand}>
 						<ButtonDivider>
 							<GlyphButton
@@ -124,6 +150,11 @@ function ListHeaderToolbar ({
 								onClick={createOnClick}
 							/>
 						</ButtonDivider>
+					</Section>}
+					{list.isMediaCollection && <Section cssStyles={classes.create}>
+						<UploadMultipleFilesButton
+							onClick={uploadMultipleFilesClick}
+						/>
 					</Section>}
 				</Group>
 			</Section>
@@ -147,6 +178,7 @@ ListHeaderToolbar.propTypes = {
 	searchHandleClear: PropTypes.func.isRequired,
 	searchHandleKeyup: PropTypes.func.isRequired,
 	searchValue: PropTypes.string,
+	uploadMultipleFilesClick: PropTypes.func,
 };
 
 const tabletGrowStyles = {
