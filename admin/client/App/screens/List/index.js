@@ -39,6 +39,7 @@ import {
 	setCurrentPage,
 	selectList,
 	clearCachedQuery,
+	loadItems,
 } from './actions';
 
 import {
@@ -78,6 +79,9 @@ const ListView = React.createClass({
 		});
 
 	},
+	componentDidMount () {
+		this.props.dispatch(loadItems());
+	},
 	componentWillReceiveProps (nextProps) {
 		// We've opened a new list from the client side routing, so initialize
 		// again with the new list id
@@ -113,8 +117,43 @@ const ListView = React.createClass({
 			}
 		});
 	},
-	uploadMultipleFiles (e) {
-		console.log('test');
+	uploadMultipleFiles (files) {
+		var promises = [];
+		var ListView = this;
+		if (files && files.length) {
+			for (let index = 0; index < files.length; index++) {
+				const file = files[index];
+				var formData = new FormData();
+				formData.append('name', file.name);
+				formData.append('file', file);
+				var newPromise = new Promise(function (resolve, reject) {
+					ListView.props.currentList.createItem(formData, (err, data) => {
+						if (data) {
+							resolve(data);
+						} else {
+							if (!err) {
+								err = {
+									error: 'connection error',
+								};
+							}
+							// If we get a database error, show the database error message
+							// instead of only saying "Database error"
+							if (err.error === 'database error') {
+								err.error = err.detail.errmsg;
+							}
+							reject(err);
+						}
+					});
+				});
+				promises.push(newPromise);
+			}
+		}
+
+		Promise.all(promises).then(function (results) {
+			ListView.props.dispatch(loadItems());
+		}).catch(function (err) {
+			console.log(err);
+		});
 	},
 	updateSearch (e) {
 		this.props.dispatch(setActiveSearch(e.target.value));
@@ -268,7 +307,7 @@ const ListView = React.createClass({
 						: this.openCreateModal}
 
 					// upload multiple files
-					uploadMultipleFilesClick={this.uploadMultipleFiles}
+					uploadMultipleFilesSubmit={this.uploadMultipleFiles}
 
 					// search
 					searchHandleChange={this.updateSearch}

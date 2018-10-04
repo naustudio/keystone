@@ -18,7 +18,6 @@ export function loadItems (options = {}) {
 		const state = getState();
 		// Hold a reference to the currentList in state.
 		const currentList = state.lists.currentList;
-
 		currentList.loadItems({
 			search: state.active.search,
 			filters: state.active.filters,

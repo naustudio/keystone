@@ -44,24 +44,40 @@ function CreateButton ({ listName, onClick, ...props }) {
 	);
 };
 
-function UploadMultipleFilesButton ({ onClick, ...props }) {
+function UploadMultipleFilesForm ({ onSubmit, ...props }) {
+	var onInputChange = function (e) {
+		var fileInput = e.target;
+		if (onSubmit) {
+			onSubmit(fileInput.files);
+		}
+	};
+	var onUploadClick = function (e) {
+		var button = e.currentTarget;
+		var input = button.nextElementSibling;
+		if (input && input.tagName === 'INPUT') {
+			input.click();
+		}
+	};
 	return (
-		<GlyphButton
-			block
-			color="success"
-			data-e2e-list-create-button="header"
-			glyph="plus"
-			onClick={onClick}
-			position="left"
-			title="Upload Files"
-			{...props}
-		>
-			<ResponsiveText
-				visibleSM="Upload"
-				visibleMD="Upload"
-				visibleLG="Upload files"
-			/>
-		</GlyphButton>
+		<div>
+			<GlyphButton
+				block
+				color="success"
+				onClick={onUploadClick}
+				data-e2e-list-create-button="header"
+				glyph="plus"
+				position="left"
+				title="Upload Files"
+				{...props}
+			>
+				<ResponsiveText
+					visibleSM="Upload"
+					visibleMD="Upload"
+					visibleLG="Upload files"
+				/>
+			</GlyphButton>
+			<input key="input" onChange={onInputChange} type="file" name="file" hidden accept="image/*, video/*" id="upload-files" multiple />
+		</div>
 	);
 };
 
@@ -80,7 +96,7 @@ function ListHeaderToolbar ({
 	createOnClick,
 
 	// upload multiple files
-	uploadMultipleFilesClick,
+	uploadMultipleFilesSubmit,
 
 	// search
 	searchHandleChange,
@@ -152,8 +168,8 @@ function ListHeaderToolbar ({
 						</ButtonDivider>
 					</Section>}
 					{list.isMediaCollection && <Section cssStyles={classes.create}>
-						<UploadMultipleFilesButton
-							onClick={uploadMultipleFilesClick}
+						<UploadMultipleFilesForm
+							onSubmit={uploadMultipleFilesSubmit}
 						/>
 					</Section>}
 				</Group>
@@ -178,7 +194,7 @@ ListHeaderToolbar.propTypes = {
 	searchHandleClear: PropTypes.func.isRequired,
 	searchHandleKeyup: PropTypes.func.isRequired,
 	searchValue: PropTypes.string,
-	uploadMultipleFilesClick: PropTypes.func,
+	uploadMultipleFilesSubmit: PropTypes.func,
 };
 
 const tabletGrowStyles = {
