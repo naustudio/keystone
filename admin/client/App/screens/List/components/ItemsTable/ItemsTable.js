@@ -112,16 +112,20 @@ const ItemsTable = React.createClass({
 				<div className="ItemList-wrapper">
 					{items.results.map((item, i) => {
 						if (item.fields.file && item.fields.file.url) {
+							var activeCheck = this.props.checkedItems[item.id] && this.props.manageMode;
 							return (
-								<div style={{ display: 'inline-block', width: '20%', padding: '0 10px', marginBottom: '20px' }} key={item.id}>
+								<div style={{ position: 'relative', display: 'inline-block', width: '20%', padding: '0 10px', marginBottom: '20px' }} key={item.id}>
 									<img
-										style={{ width: '100%', cursor: 'pointer' }}
+										style={{ width: '100%', cursor: 'pointer', opacity: activeCheck ? '0.5' : '1' }}
 										src={item.fields.file.url}
 										alt={item.fields.altText}
 										onClick={this.handleMediaClick.bind(this)}
 										data-index={i}
 										data-href={`${Keystone.adminPath}/${this.props.list.path}/${item.id}`}
 									/>
+									{activeCheck ? (
+										<span className="octicon octicon-check" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: 25 }} />
+									) : ''}
 								</div>
 							);
 						}

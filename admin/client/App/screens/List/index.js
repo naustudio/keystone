@@ -48,6 +48,38 @@ import {
 
 const ESC_KEY_CODE = 27;
 
+function UploadMultipleFilesForm ({ onSubmit, ...props }) {
+	var onInputChange = function (e) {
+		var fileInput = e.target;
+		if (onSubmit) {
+			onSubmit(fileInput.files);
+		}
+	};
+	var onUploadClick = function (e) {
+		var button = e.currentTarget;
+		var input = button.nextElementSibling;
+		if (input && input.tagName === 'INPUT') {
+			input.click();
+		}
+	};
+	return (
+		<div style={{ marginTop: '20px' }}>
+			<GlyphButton
+				color="success"
+				onClick={onUploadClick}
+				data-e2e-list-create-button="header"
+				glyph="plus"
+				position="left"
+				title="Upload Files"
+				{...props}
+			>
+				Upload files
+			</GlyphButton>
+			<input key="input" onChange={onInputChange} type="file" name="file" hidden accept="image/*, video/*" id="upload-files" multiple />
+		</div>
+	);
+};
+
 const ListView = React.createClass({
 	contextTypes: {
 		router: React.PropTypes.object.isRequired,
@@ -473,6 +505,9 @@ const ListView = React.createClass({
 				) : null}
 				<BlankState heading={`No ${this.props.currentList.plural.toLowerCase()} found...`} style={{ marginTop: 40 }}>
 					{button}
+					{this.props.currentList.isMediaCollection ? (
+						<UploadMultipleFilesForm onSubmit={this.uploadMultipleFiles} />
+					) : null}
 				</BlankState>
 			</Container>
 		);
