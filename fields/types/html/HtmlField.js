@@ -47,6 +47,17 @@ module.exports = Field.create({
 
 		opts.setup = function (editor) {
 			self.editor = editor;
+			if (opts.toolbar.indexOf('localmediabutton') > -1) {
+				editor.addButton('localmediabutton', {
+					text: 'Local Media',
+					icon: false,
+					onclick: function (e) {
+						if (self.props.onCustomButtonClick) {
+							self.props.onCustomButtonClick('localmediabutton', editor, e);
+						}
+					},
+				});
+			}
 			editor.on('change', self.valueChanged);
 			editor.on('focus', self.focusChanged.bind(self, true));
 			editor.on('blur', self.focusChanged.bind(self, false));
@@ -126,9 +137,13 @@ module.exports = Field.create({
 			toolbar += ' | image';
 		}
 
-		if (options.enableCloudinaryUploads || options.enableS3Uploads || options.enableLocalMediaUploads) {
+		if (options.enableCloudinaryUploads || options.enableS3Uploads) {
 			plugins.push('uploadimage');
 			toolbar += options.enableImages ? ' uploadimage' : ' | uploadimage';
+		}
+
+		if (options.enableLocalMediaUploads) {
+			toolbar += options.enableImages ? ' localmediabutton' : ' | localmediabutton';
 		}
 
 		if (options.enableLocalMediaUploads) {

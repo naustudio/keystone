@@ -16,6 +16,7 @@ import theme from '../../../../theme';
 import { Button, LoadingButton } from '../../../elemental';
 import AlertMessages from '../../../shared/AlertMessages';
 import ConfirmationDialog from '../../../shared/ConfirmationDialog';
+import LocalMediaDialog from '../../../shared/LocalMediaDialog';
 
 import FormHeading from './FormHeading';
 import AltText from './AltText';
@@ -91,7 +92,40 @@ var EditForm = React.createClass({
 		values[event.path] = event.value;
 		this.setState({ values });
 	},
-
+	handleHtmlFieldCustomButtonClick (name, editor, event) {
+		if (name === 'localmediabutton') {
+			this.setState({ localMediaDialogIsOpen: true });
+		}
+		this.editor = editor;
+	},
+	onMediaClick (media) {
+		if (!media || !this.editor) {
+			return;
+		}
+		var url = media.fields.file && media.fields.file.url ? media.fields.file.url : '';
+		var caption = media.fields.caption;
+		var altText = media.fields.altText || '';
+		console.log(media.fields);
+		if (url) {
+			if (!caption) {
+				this.editor.insertContent(`
+					<img src="${url}" alt="${altText}" data-mce-src="${url}">
+				`);
+			} else {
+				this.editor.insertContent(`
+					<figure class="image" contenteditable="false">
+						<img src="${url}" alt="${altText}" data-mce-src="${url}">
+						<figcaption contenteditable="true">${caption}</figcaption>
+					</figure>
+				`);
+			}
+		}
+	},
+	toggleLocalMediaDialog () {
+		this.setState({
+			localMediaDialogIsOpen: !this.state.localMediaDialogIsOpen,
+		});
+	},
 	toggleDeleteDialog () {
 		this.setState({
 			deleteDialogIsOpen: !this.state.deleteDialogIsOpen,
@@ -256,6 +290,9 @@ var EditForm = React.createClass({
 				if (index === 0 && this.state.focusFirstField) {
 					props.autoFocus = true;
 				}
+				if (field.type === 'html') {
+					props.onCustomButtonClick = this.handleHtmlFieldCustomButtonClick;
+				}
 				return React.createElement(Fields[field.type], props);
 			}
 		}, this);
@@ -390,6 +427,11 @@ var EditForm = React.createClass({
 					<Grid.Col large="one-quarter"><span /></Grid.Col>
 				</Grid.Row>
 				{this.renderFooterBar()}
+				<LocalMediaDialog
+					isOpen={this.state.localMediaDialogIsOpen}
+					onCancel={this.toggleLocalMediaDialog}
+					onMediaClick={this.onMediaClick}
+				/>
 				<ConfirmationDialog
 					confirmationLabel="Reset"
 					isOpen={this.state.resetDialogIsOpen}
