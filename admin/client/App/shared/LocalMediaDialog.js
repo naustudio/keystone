@@ -55,15 +55,27 @@ const LocalMediaDialog = React.createClass({
 				/>
 				<Modal.Body>
 					{media.map(function (item, index) {
+						var isVideo = item.fields.file.mimetype.indexOf('video') > -1;
 						return (
 							<div style={{ position: 'relative', display: 'inline-block', width: '33%', padding: '0 10px', marginBottom: '20px' }} key={item.id}>
-								<img
-									style={{ width: '100%', cursor: 'pointer' }}
-									src={item.fields.file.url}
-									alt={item.fields.altText}
-									data-index={index}
-									onClick={self.handleMediaClick.bind(self)}
-								/>
+								{isVideo ? (
+									<div
+										style={{ width: '100%', position: 'relative', cursor: 'pointer' }}
+										onClick={self.handleMediaClick.bind(self)}
+										data-index={index}
+									>
+										<video src={item.fields.file.url} style={{ width: '100%', pointerEvents: 'none', opacity: 0.8 }} />
+										<span style={{ position: 'absolute', top: 0, left: 2, fontSize: 24 }} className="octicon octicon-device-camera-video" />
+									</div>
+								) : (
+									<img
+										style={{ width: '100%', cursor: 'pointer' }}
+										src={item.fields.file.url}
+										alt={item.fields.altText}
+										data-index={index}
+										onClick={self.handleMediaClick.bind(self)}
+									/>
+								)}
 							</div>
 						);
 					})}

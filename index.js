@@ -116,6 +116,7 @@ Keystone.prototype.importer = importer;
 Keystone.prototype.init = require('./lib/core/init');
 Keystone.prototype.initDatabaseConfig = require('./lib/core/initDatabaseConfig');
 Keystone.prototype.initExpressApp = require('./lib/core/initExpressApp');
+Keystone.prototype.initMediaCollection = require('./lib/core/initMediaCollection');
 Keystone.prototype.initExpressSession = require('./lib/core/initExpressSession');
 Keystone.prototype.initNav = require('./lib/core/initNav');
 Keystone.prototype.list = require('./lib/core/list');

@@ -113,16 +113,30 @@ const ItemsTable = React.createClass({
 					{items.results.map((item, i) => {
 						if (item.fields.file && item.fields.file.url) {
 							var activeCheck = this.props.checkedItems[item.id] && this.props.manageMode;
+							var isVideo = item.fields.file.mimetype.indexOf('video') > -1;
 							return (
 								<div style={{ position: 'relative', display: 'inline-block', width: '20%', padding: '0 10px', marginBottom: '20px' }} key={item.id}>
-									<img
-										style={{ width: '100%', cursor: 'pointer', opacity: activeCheck ? '0.5' : '1' }}
-										src={item.fields.file.url}
-										alt={item.fields.altText}
-										onClick={this.handleMediaClick.bind(this)}
-										data-index={i}
-										data-href={`${Keystone.adminPath}/${this.props.list.path}/${item.id}`}
-									/>
+									{isVideo ? (
+										<div
+											style={{ width: '100%', position: 'relative', cursor: 'pointer', opacity: activeCheck ? '0.5' : '1' }}
+											onClick={this.handleMediaClick.bind(this)}
+											data-index={i}
+											data-href={`${Keystone.adminPath}/${this.props.list.path}/${item.id}`}
+										>
+											<video src={item.fields.file.url} style={{ width: '100%', pointerEvents: 'none', opacity: 0.8 }} />
+											<span style={{ position: 'absolute', top: 0, left: 2, fontSize: 24 }} className="octicon octicon-device-camera-video" />
+										</div>
+									) : (
+										<img
+											style={{ width: '100%', cursor: 'pointer', opacity: activeCheck ? '0.5' : '1' }}
+											src={item.fields.file.url}
+											alt={item.fields.altText}
+											onClick={this.handleMediaClick.bind(this)}
+											data-index={i}
+											data-href={`${Keystone.adminPath}/${this.props.list.path}/${item.id}`}
+										/>
+									)}
+									{/* <span title={item.name} style={{ position: 'absolute', bottom: 0, width: '100%', height: 20, whiteSpace: 'nowrap', overflow: 'elipsis' }}>{item.name}</span> */}
 									{activeCheck ? (
 										<span className="octicon octicon-check" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: 25 }} />
 									) : ''}

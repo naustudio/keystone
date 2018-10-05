@@ -105,19 +105,27 @@ var EditForm = React.createClass({
 		var url = media.fields.file && media.fields.file.url ? media.fields.file.url : '';
 		var caption = media.fields.caption;
 		var altText = media.fields.altText || '';
-		console.log(media.fields);
+		var isVideo = media.fields.file.mimetype.indexOf('video') > -1;
 		if (url) {
-			if (!caption) {
-				this.editor.insertContent(`
-					<img src="${url}" alt="${altText}" data-mce-src="${url}">
-				`);
+			var content = '';
+			if (isVideo) {
+				content = `
+					<video src="${url}" data-mcs-src="${url}" controls />
+				`;
 			} else {
+				content = `
+					<img src="${url}" alt="${altText}" data-mce-src="${url}">
+				`;
+			}
+			if (!isVideo && caption) {
 				this.editor.insertContent(`
 					<figure class="image" contenteditable="false">
-						<img src="${url}" alt="${altText}" data-mce-src="${url}">
+						${content}
 						<figcaption contenteditable="true">${caption}</figcaption>
 					</figure>
 				`);
+			} else {
+				this.editor.insertContent(content);
 			}
 		}
 	},
