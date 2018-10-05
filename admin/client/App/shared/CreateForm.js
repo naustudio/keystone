@@ -10,6 +10,7 @@ import AlertMessages from './AlertMessages';
 import { Fields } from 'FieldTypes';
 import InvalidFieldType from './InvalidFieldType';
 import { Button, Form, Modal } from '../elemental';
+import LocalMediaDialog from './LocalMediaDialog';
 
 const CreateForm = React.createClass({
 	displayName: 'CreateForm',
@@ -57,6 +58,53 @@ const CreateForm = React.createClass({
 		values[event.path] = event.value;
 		this.setState({
 			values: values,
+		});
+	},
+	handleHtmlFieldCustomButtonClick (name, editor, event) {
+		if (name === 'localmediabutton') {
+			this.setState({ localMediaDialogIsOpen: true });
+		}
+		this.editor = editor;
+	},
+	onMediaClick (media) {
+		if (!media || !this.editor) {
+			return;
+		}
+		var url = media.fields.file && media.fields.file.url ? media.fields.file.url : '';
+		var caption = media.fields.caption;
+		var altText = media.fields.altText || '';
+		var isVideo = media.fields.file.mimetype.indexOf('video') > -1;
+		if (url) {
+			var content = '';
+			if (isVideo) {
+				content = `
+					<video src="${url}" data-mcs-src="${url}" controls />
+				`;
+			} else {
+				content = `
+					<img src="${url}" alt="${altText}" data-mce-src="${url}">
+				`;
+			}
+			if (!isVideo && caption) {
+				this.editor.insertContent(`
+					<figure class="image" contenteditable="false">
+						${content}
+						<figcaption contenteditable="true">${caption}</figcaption>
+					</figure>
+				`);
+			} else {
+				this.editor.insertContent(content);
+			}
+		}
+	},
+	toggleUploadedImagesDialog () {
+		this.setState({
+			uploadedImagesDialogIsOpen: !this.state.uploadedImagesDialogIsOpen,
+		});
+	},
+	toggleLocalMediaDialog () {
+		this.setState({
+			localMediaDialogIsOpen: !this.state.localMediaDialogIsOpen,
 		});
 	},
 	// Set the props of a field
@@ -147,6 +195,9 @@ const CreateForm = React.createClass({
 			if (!focusWasSet) {
 				fieldProps.autoFocus = focusWasSet = true;
 			}
+			if (field.type === 'html') {
+				fieldProps.onCustomButtonClick = this.handleHtmlFieldCustomButtonClick;
+			}
 			form.push(React.createElement(Fields[field.type], fieldProps));
 		});
 
@@ -173,6 +224,11 @@ const CreateForm = React.createClass({
 						Cancel
 					</Button>
 				</Modal.Footer>
+				<LocalMediaDialog
+					isOpen={this.state.localMediaDialogIsOpen}
+					onCancel={this.toggleLocalMediaDialog}
+					onMediaClick={this.onMediaClick}
+				/>
 			</Form>
 		);
 	},
