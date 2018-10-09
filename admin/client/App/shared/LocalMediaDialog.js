@@ -55,7 +55,7 @@ const LocalMediaDialog = React.createClass({
 				/>
 				<Modal.Body>
 					{media.map(function (item, index) {
-						var isVideo = item.fields.file.mimetype.indexOf('video') > -1;
+						var isVideo = item.fields.file.mimetype ? item.fields.file.mimetype.indexOf('video') > -1 : false;
 						return (
 							<div style={{ position: 'relative', display: 'inline-block', width: '33%', padding: '0 10px', marginBottom: '20px' }} key={item.id}>
 								{isVideo ? (

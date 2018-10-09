@@ -113,7 +113,7 @@ const ItemsTable = React.createClass({
 					{items.results.map((item, i) => {
 						if (item.fields.file && item.fields.file.url) {
 							var activeCheck = this.props.checkedItems[item.id] && this.props.manageMode;
-							var isVideo = item.fields.file.mimetype.indexOf('video') > -1;
+							var isVideo = item.fields.file.mimetype ? item.fields.file.mimetype.indexOf('video') > -1 : false;
 							return (
 								<div style={{ position: 'relative', display: 'inline-block', width: '20%', padding: '0 10px', marginBottom: '20px' }} key={item.id}>
 									{isVideo ? (
