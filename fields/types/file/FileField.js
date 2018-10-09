@@ -208,7 +208,7 @@ module.exports = Field.create({
 				target="__blank"
 				style={{ float: 'left', marginRight: '1em', maxWidth: '50%' }}
 			>
-				<img src={imageSource} style={{ 'max-height': 100, 'max-width': '100%' }} />
+				<img src={imageSource} style={{ 'max-height': 150, 'max-width': '100%' }} />
 			</ImageThumbnail>
 		);
 	},
