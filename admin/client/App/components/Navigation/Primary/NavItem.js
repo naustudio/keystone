@@ -18,7 +18,7 @@ const PrimaryNavItem = ({ children, className, href, label, title, to, active })
 			title={title}
 			to={to}
 			// Block clicks on active link
-			onClick={(evt) => { if (active) evt.preventDefault(); }}
+			// onClick={(evt) => { if (active) evt.preventDefault(); }}
 		>
 			{children}
 		</Link>
