@@ -44,6 +44,14 @@ const CreateForm = React.createClass({
 	componentDidMount () {
 		document.body.addEventListener('keyup', this.handleKeyPress, false);
 	},
+	componentDidUpdate (prevProps, prevState) {
+		if (this.state.alerts && this.state.alerts.error) {
+			var form = document.getElementById('create-form');
+			if (form) {
+				form.parentElement.scrollTop = 0;
+			}
+		}
+	},
 	componentWillUnmount () {
 		document.body.removeEventListener('keyup', this.handleKeyPress, false);
 	},
@@ -202,7 +210,7 @@ const CreateForm = React.createClass({
 		});
 
 		return (
-			<Form layout="horizontal" onSubmit={this.submitForm}>
+			<Form layout="horizontal" id="create-form" onSubmit={this.submitForm}>
 				<Modal.Header
 					text={'Create a new ' + list.singular}
 					showCloseButton
