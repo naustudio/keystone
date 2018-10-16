@@ -23,6 +23,7 @@ const buildInitialState = (props) => ({
 	removeExisting: false,
 	uploadFieldPath: `File-${props.path}-${++uploadInc}`,
 	userSelectedFile: null,
+	readSelectedFile: null,
 });
 
 module.exports = Field.create({
@@ -75,8 +76,19 @@ module.exports = Field.create({
 			? this.state.userSelectedFile.name
 			: this.props.value.filename;
 	},
+	readURL (file) {
+		if (file) {
+			var reader = new FileReader();
+
+			reader.onload = (e) => {
+				this.setState({ readSelectedFile: e.target.result });
+			};
+
+			reader.readAsDataURL(file);
+		}
+	},
 	getFileUrl () {
-		return this.props.value && this.props.value.url;
+		return this.state.readSelectedFile ? this.state.readSelectedFile : (this.props.value && this.props.value.url);
 	},
 	isImage () {
 		const href = this.props.value ? this.props.value.url : undefined;
@@ -92,6 +104,8 @@ module.exports = Field.create({
 	},
 	handleFileChange (event) {
 		const userSelectedFile = event.target.files[0];
+
+		this.readURL(userSelectedFile);
 
 		this.setState({
 			userSelectedFile: userSelectedFile,
